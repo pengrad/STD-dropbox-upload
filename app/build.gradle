@@ -10,6 +10,16 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+        def API_KEY = properties.getProperty('DROPBOX_API_KEY')
+        def API_SECRET = properties.getProperty('DROPBOX_API_SECRET')
+
+        buildConfigField "String", "API_KEY", "\"" + API_KEY + "\""
+        buildConfigField "String", "API_SECRET", "\"" + API_SECRET + "\""
+        manifestPlaceholders = [API_KEY: API_KEY]
     }
     buildTypes {
         release {

@@ -38,11 +38,14 @@
                 android:textSize="20sp"/>
 
             <EditText
+                android:id="@+id/jobNumber"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:hint="Auftragsnummer"/>
+                android:hint="Auftragsnummer"
+                android:inputType="number"/>
 
             <EditText
+                android:id="@+id/clientName"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:hint="Name des Kunden"/>
