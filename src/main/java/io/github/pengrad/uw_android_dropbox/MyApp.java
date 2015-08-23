@@ -59,4 +59,9 @@ public class MyApp extends Application {
                 .putString(DROPBOX_TOKEN, accessToken)
                 .apply();
     }
+
+    public void unlinkDropbox() {
+        mDBApi.getSession().unlink();
+        saveDropboxAuth("");
+    }
 }
