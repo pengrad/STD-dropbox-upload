@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.session.AppKeyPair;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,14 +33,10 @@ public class AddImagesActivity extends AppCompatActivity {
 
     public static final int REQUEST_LOAD_IMAGE = 123;
 
-    //    @Bind(R.id.image) ImageView mImageView;
-//    @Bind(R.id.layoutImage) View mLayoutImage;
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.listview) ListView mListView;
 
-    private DropboxAPI<AndroidAuthSession> mDBApi;
-    private String mImagePath;
     private ListAdapter mAdapter;
 
     @Override
@@ -60,10 +47,6 @@ public class AddImagesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initActionBar();
-
-        AppKeyPair appKeys = new AppKeyPair(BuildConfig.API_KEY, BuildConfig.API_SECRET);
-        AndroidAuthSession session = new AndroidAuthSession(appKeys);
-        mDBApi = new DropboxAPI<>(session);
 
         mAdapter = new ListAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -86,24 +69,6 @@ public class AddImagesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mDBApi.getSession().authenticationSuccessful()) {
-            try {
-                // Required to complete auth, sets the access token on the session
-                mDBApi.getSession().finishAuthentication();
-
-                String accessToken = mDBApi.getSession().getOAuth2AccessToken();
-                Log.d("DbAuthLog", "Success " + accessToken);
-                Toast.makeText(this, "Ok, you can upload image now", Toast.LENGTH_SHORT).show();
-            } catch (IllegalStateException e) {
-                Log.d("++++", "Error authenticating", e);
-            }
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -116,12 +81,7 @@ public class AddImagesActivity extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-
-//            mImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//            mImagePath = picturePath;
-
             mAdapter.addImage(picturePath);
-//            mLayoutImage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -147,49 +107,12 @@ public class AddImagesActivity extends AppCompatActivity {
     @OnClick(R.id.buttonUpload)
     void uploadImages() {
 
-        if (!mDBApi.getSession().authenticationSuccessful()) {
-            mDBApi.getSession().startOAuth2Authentication(AddImagesActivity.this);
-            return;
-        }
-
-        new AsyncTask<Void, Object, Object>() {
-            @Override
-            protected void onPreExecute() {
-                Toast.makeText(getApplicationContext(), "Starting upload to dropbox", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            protected Object doInBackground(Void... params) {
-                try {
-                    File file = new File(mImagePath);
-                    FileInputStream inputStream = new FileInputStream(file);
-                    long millis = System.currentTimeMillis();
-                    DropboxAPI.Entry response = mDBApi.putFile(getFileName(mImagePath), inputStream, file.length(), null, null);
-                    Log.d("DbExampleLog", "The uploaded file's rev is: " + response.rev);
-                } catch (Exception e) {
-                    Log.d("++++", "Upload error", e);
-                    Toast.makeText(getApplicationContext(), "Upload error, do you have internet?", Toast.LENGTH_SHORT).show();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object object) {
-                Toast.makeText(getApplicationContext(), "Uploaded, check you dropbox!", Toast.LENGTH_SHORT).show();
-            }
-        }.execute();
     }
 
     @OnClick(R.id.buttonAddImage)
     void addImage() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUEST_LOAD_IMAGE);
-    }
-
-    //    @OnClick(R.id.buttonImageDelete)
-    void deleteImage() {
-//        mImageView.setImageBitmap(null);
-//        mLayoutImage.setVisibility(View.GONE);
     }
 
     class ListAdapter extends BaseAdapter {
