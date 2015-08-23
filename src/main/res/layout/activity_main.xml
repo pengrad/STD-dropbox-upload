@@ -2,8 +2,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
               android:gravity="center_horizontal"
+              android:orientation="vertical"
               android:paddingBottom="@dimen/activity_vertical_margin"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
@@ -21,13 +21,21 @@
 
     <Button
         android:id="@+id/addImageSet"
-        android:layout_width="240dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_add_circle_outline_grey_900_24dp"
+        android:drawablePadding="10dp"
+        android:gravity="left"
+        android:padding="20dp"
         android:text="Neues Bilderset anlegen"/>
 
     <Button
-        android:layout_width="240dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_warning_grey_900_24dp"
+        android:drawablePadding="10dp"
+        android:gravity="left"
+        android:padding="20dp"
         android:text="Status überprüfen"/>
 
 </LinearLayout>
