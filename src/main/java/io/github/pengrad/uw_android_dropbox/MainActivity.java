@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonStatus)
     void openStatusActivity() {
-
+        startActivity(new Intent(this, StatusActivity.class));
     }
 
     boolean isDropboxLinked() {
