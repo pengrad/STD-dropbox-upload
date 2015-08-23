@@ -21,6 +21,7 @@
         android:text="Neues Bilderset anlegen"/>
 
     <Button
+        android:id="@+id/buttonStatus"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_warning_grey_900_24dp"

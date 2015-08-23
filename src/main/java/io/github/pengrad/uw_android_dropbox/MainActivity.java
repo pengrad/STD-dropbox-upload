@@ -21,4 +21,9 @@ public class MainActivity extends AppCompatActivity {
     void openAddImagesActivity() {
         startActivity(new Intent(this, AddImagesActivity.class));
     }
+
+    @OnClick(R.id.buttonStatus)
+    void openStatusActivity() {
+
+    }
 }
