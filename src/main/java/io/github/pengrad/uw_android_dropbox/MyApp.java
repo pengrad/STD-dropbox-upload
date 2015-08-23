@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * stas
@@ -26,6 +27,8 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        LeakCanary.install(this);
 
         AppKeyPair appKeys = new AppKeyPair(BuildConfig.API_KEY, BuildConfig.API_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
