@@ -21,17 +21,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:text="STD"
-                android:textColor="#19c"
-                android:textSize="36sp"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Stammdaten"
