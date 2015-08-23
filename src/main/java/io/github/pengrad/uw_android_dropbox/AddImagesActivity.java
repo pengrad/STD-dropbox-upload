@@ -1,5 +1,6 @@
 package io.github.pengrad.uw_android_dropbox;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -11,11 +12,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.dropbox.client2.DropboxAPI;
@@ -25,7 +29,9 @@ import com.dropbox.client2.session.AppKeyPair;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -36,14 +42,15 @@ public class AddImagesActivity extends AppCompatActivity {
 
     public static final int REQUEST_LOAD_IMAGE = 123;
 
-    @Bind(R.id.image) ImageView mImageView;
-    @Bind(R.id.layoutImage) View mLayoutImage;
-    @Bind(R.id.buttonAddImage) Button mBAddImage;
+    //    @Bind(R.id.image) ImageView mImageView;
+//    @Bind(R.id.layoutImage) View mLayoutImage;
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
+    @Bind(R.id.listview) ListView mListView;
 
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private String mImagePath;
+    private ListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,9 @@ public class AddImagesActivity extends AppCompatActivity {
         AppKeyPair appKeys = new AppKeyPair(BuildConfig.API_KEY, BuildConfig.API_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
         mDBApi = new DropboxAPI<>(session);
+
+        mAdapter = new ListAdapter(this);
+        mListView.setAdapter(mAdapter);
     }
 
     private void initActionBar() {
@@ -97,7 +107,6 @@ public class AddImagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -108,11 +117,11 @@ public class AddImagesActivity extends AppCompatActivity {
             cursor.close();
 
 
-            mImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            mImagePath = picturePath;
+//            mImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//            mImagePath = picturePath;
 
-            mBAddImage.setVisibility(View.GONE);
-            mLayoutImage.setVisibility(View.VISIBLE);
+            mAdapter.addImage(picturePath);
+//            mLayoutImage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -177,11 +186,65 @@ public class AddImagesActivity extends AppCompatActivity {
         startActivityForResult(i, REQUEST_LOAD_IMAGE);
     }
 
-    @OnClick(R.id.buttonImageDelete)
+    //    @OnClick(R.id.buttonImageDelete)
     void deleteImage() {
-        mImageView.setImageBitmap(null);
-        mLayoutImage.setVisibility(View.GONE);
-        mBAddImage.setVisibility(View.VISIBLE);
+//        mImageView.setImageBitmap(null);
+//        mLayoutImage.setVisibility(View.GONE);
+    }
+
+    class ListAdapter extends BaseAdapter {
+
+        private final LayoutInflater mInflater;
+
+        private List<String> mImages;
+
+        public ListAdapter(Context context) {
+            mInflater = LayoutInflater.from(context);
+            mImages = new ArrayList<>();
+        }
+
+        public void addImage(String path) {
+            mImages.add(path);
+            notifyDataSetChanged();
+        }
+
+        public void removeImage(int pos) {
+            mImages.remove(pos);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mImages.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mImages.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.list_item_image, parent, false);
+            }
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(mImages.get(position)));
+
+            convertView.findViewById(R.id.buttonImageDelete).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeImage(position);
+                }
+            });
+
+            return convertView;
+        }
     }
 
 }
