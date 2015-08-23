@@ -26,91 +26,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class AddImagesActivity extends AppCompatActivity {
 
     public static final int REQUEST_LOAD_IMAGE = 123;
 
-
-    final static private String APP_KEY = BuildConfig.API_KEY;
-    final static private String APP_SECRET = BuildConfig.API_SECRET;
+    @Bind(R.id.image) ImageView mImageView;
+    @Bind(R.id.layoutImage) View mLayoutImage;
+    @Bind(R.id.buttonAddImage) Button mBAddImage;
+    @Bind(R.id.jobNumber) EditText mEditJobNumber;
+    @Bind(R.id.clientName) EditText mEditClientName;
 
     private DropboxAPI<AndroidAuthSession> mDBApi;
-
-    private ImageView mImageView;
-    private View mLayoutImage;
-    private Button mBAddImage;
     private String mImagePath;
-    private EditText mEditJobNumber;
-    private EditText mEditClientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_images);
 
-        mLayoutImage = findViewById(R.id.layoutImage);
-        mBAddImage = (Button) findViewById(R.id.buttonAddImage);
-        mImageView = (ImageView) findViewById(R.id.image);
+        ButterKnife.bind(this);
 
-        mEditJobNumber = (EditText) findViewById(R.id.jobNumber);
-        mEditClientName = (EditText) findViewById(R.id.clientName);
-
-        mBAddImage.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, REQUEST_LOAD_IMAGE);
-            }
-        });
-
-        findViewById(R.id.buttonImageDelete).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mImageView.setImageBitmap(null);
-                mLayoutImage.setVisibility(View.GONE);
-                mBAddImage.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-        findViewById(R.id.buttonUpload).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                if (!mDBApi.getSession().authenticationSuccessful()) {
-                    mDBApi.getSession().startOAuth2Authentication(AddImagesActivity.this);
-                    return;
-                }
-
-
-                new AsyncTask<Void, Object, Object>() {
-                    @Override
-                    protected void onPreExecute() {
-                        Toast.makeText(getApplicationContext(), "Starting upload to dropbox", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    protected Object doInBackground(Void... params) {
-                        try {
-                            File file = new File(mImagePath);
-                            FileInputStream inputStream = new FileInputStream(file);
-                            long millis = System.currentTimeMillis();
-                            DropboxAPI.Entry response = mDBApi.putFile(getFileName(mImagePath), inputStream, file.length(), null, null);
-                            Log.d("DbExampleLog", "The uploaded file's rev is: " + response.rev);
-                        } catch (Exception e) {
-                            Log.d("++++", "Upload error", e);
-                            Toast.makeText(getApplicationContext(), "Upload error, do you have internet?", Toast.LENGTH_SHORT).show();
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object object) {
-                        Toast.makeText(getApplicationContext(), "Uploaded, check you dropbox!", Toast.LENGTH_SHORT).show();
-                    }
-                }.execute();
-
-            }
-        });
-
-        AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+        AppKeyPair appKeys = new AppKeyPair(BuildConfig.API_KEY, BuildConfig.API_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
         mDBApi = new DropboxAPI<>(session);
     }
@@ -174,4 +114,54 @@ public class AddImagesActivity extends AppCompatActivity {
 
         return job + "_" + timestamp + "_" + client + extension;
     }
+
+    @OnClick(R.id.buttonUpload)
+    void uploadImages() {
+
+        if (!mDBApi.getSession().authenticationSuccessful()) {
+            mDBApi.getSession().startOAuth2Authentication(AddImagesActivity.this);
+            return;
+        }
+
+        new AsyncTask<Void, Object, Object>() {
+            @Override
+            protected void onPreExecute() {
+                Toast.makeText(getApplicationContext(), "Starting upload to dropbox", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected Object doInBackground(Void... params) {
+                try {
+                    File file = new File(mImagePath);
+                    FileInputStream inputStream = new FileInputStream(file);
+                    long millis = System.currentTimeMillis();
+                    DropboxAPI.Entry response = mDBApi.putFile(getFileName(mImagePath), inputStream, file.length(), null, null);
+                    Log.d("DbExampleLog", "The uploaded file's rev is: " + response.rev);
+                } catch (Exception e) {
+                    Log.d("++++", "Upload error", e);
+                    Toast.makeText(getApplicationContext(), "Upload error, do you have internet?", Toast.LENGTH_SHORT).show();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object object) {
+                Toast.makeText(getApplicationContext(), "Uploaded, check you dropbox!", Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
+    }
+
+    @OnClick(R.id.buttonAddImage)
+    void addImage() {
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, REQUEST_LOAD_IMAGE);
+    }
+
+    @OnClick(R.id.buttonImageDelete)
+    void deleteImage() {
+        mImageView.setImageBitmap(null);
+        mLayoutImage.setVisibility(View.GONE);
+        mBAddImage.setVisibility(View.VISIBLE);
+    }
+
 }
