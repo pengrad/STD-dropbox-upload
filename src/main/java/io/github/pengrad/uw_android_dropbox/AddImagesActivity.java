@@ -18,12 +18,10 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,25 +86,6 @@ public class AddImagesActivity extends AppCompatActivity {
         mAdapter.addImage(new ImageTimestamp(picturePath));
     }
 
-    private String getFileName(String path) {
-        String job = mEditJobNumber.getText().toString();
-        if (TextUtils.isEmpty(job)) {
-            job = "000";
-        }
-
-        String client = mEditClientName.getText().toString();
-        if (TextUtils.isEmpty(client)) {
-            client = "unknown";
-        }
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
-        String timestamp = dateFormat.format(new Date());
-
-        String extension = path.substring(path.lastIndexOf("."));
-
-        return job + "_" + timestamp + "_" + client + extension;
-    }
-
     @OnClick(R.id.buttonAddImage)
     void addImage() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -115,7 +94,15 @@ public class AddImagesActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonUpload)
     void uploadImages() {
+        String jobNumber = mEditJobNumber.getText().toString();
+        String client = mEditClientName.getText().toString();
+        if (TextUtils.isEmpty(jobNumber) || TextUtils.isEmpty(client)) {
+            Toast.makeText(this, "Füllen Auftragsnummer und Name des Kunden", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        Job job = new Job(jobNumber, client, mAdapter.getImages());
+        DropboxIntentService.startUploadJob(this, job);
     }
 
     class ListAdapter extends BaseAdapter {
