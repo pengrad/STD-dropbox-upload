@@ -80,9 +80,12 @@ public class AddImagesActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-
-            mAdapter.addImage(picturePath);
+            processNewImage(picturePath);
         }
+    }
+
+    private void processNewImage(String picturePath) {
+        mAdapter.addImage(new ImageTimestamp(picturePath));
     }
 
     private String getFileName(String path) {
@@ -104,36 +107,39 @@ public class AddImagesActivity extends AppCompatActivity {
         return job + "_" + timestamp + "_" + client + extension;
     }
 
-    @OnClick(R.id.buttonUpload)
-    void uploadImages() {
-
-    }
-
     @OnClick(R.id.buttonAddImage)
     void addImage() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUEST_LOAD_IMAGE);
     }
 
+    @OnClick(R.id.buttonUpload)
+    void uploadImages() {
+
+    }
+
     class ListAdapter extends BaseAdapter {
 
         private final LayoutInflater mInflater;
-
-        private List<String> mImages;
+        private List<ImageTimestamp> mImages;
 
         public ListAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
             mImages = new ArrayList<>();
         }
 
-        public void addImage(String path) {
-            mImages.add(path);
+        public void addImage(ImageTimestamp image) {
+            mImages.add(image);
             notifyDataSetChanged();
         }
 
         public void removeImage(int pos) {
             mImages.remove(pos);
             notifyDataSetChanged();
+        }
+
+        public List<ImageTimestamp> getImages() {
+            return mImages;
         }
 
         @Override
@@ -157,7 +163,7 @@ public class AddImagesActivity extends AppCompatActivity {
                 convertView = mInflater.inflate(R.layout.list_item_image, parent, false);
             }
             ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(mImages.get(position)));
+            imageView.setImageBitmap(BitmapFactory.decodeFile(mImages.get(position).imagePath));
 
             convertView.findViewById(R.id.buttonImageDelete).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,5 +175,4 @@ public class AddImagesActivity extends AppCompatActivity {
             return convertView;
         }
     }
-
 }
