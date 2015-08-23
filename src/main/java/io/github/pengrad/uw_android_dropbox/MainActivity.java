@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             mTextView.setText("Dropbox ist OK");
             mTextView.setTextColor(getResources().getColor(R.color.green));
         } else {
-            mTextView.setText("Link Dropbox Zuerst");
+            mTextView.setText("Link Dropbox");
             mTextView.setTextColor(getResources().getColor(R.color.blue));
         }
     }
