@@ -3,7 +3,9 @@ package io.github.pengrad.uw_android_dropbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,11 +14,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.addImageSet).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AddImagesActivity.class));
-            }
-        });
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.addImageSet)
+    void openAddImagesActivity() {
+        startActivity(new Intent(this, AddImagesActivity.class));
     }
 }
