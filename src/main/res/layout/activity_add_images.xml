@@ -10,13 +10,6 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="io.github.pengrad.uw_android_dropbox.AddImagesActivity">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stammdaten"
-        android:textSize="20sp"/>
-
     <EditText
         android:id="@+id/jobNumber"
         android:layout_width="240dp"
