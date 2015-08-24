@@ -33,13 +33,14 @@ import butterknife.OnClick;
 public class AddImagesActivity extends AppCompatActivity {
 
     public static final int REQUEST_CHOOSE_IMAGE = 1;
-    public static final int REQUEST_TAKE_PHOTO = 2;
+
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.listview) ListView mListView;
 
     private ImageListAdapter mAdapter;
+    private TakePhotoManager mTakePhotoManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,8 @@ public class AddImagesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initActionBar();
+
+        mTakePhotoManager = new TakePhotoManager();
 
         mAdapter = new ImageListAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -106,8 +109,9 @@ public class AddImagesActivity extends AppCompatActivity {
                     }
                 }
             });
-        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            galleryAddPic(mTakedPhotoPath);
+        } else if (requestCode == TakePhotoManager.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            String photoPath = mTakePhotoManager.getLastTakedPhoto();
+            mTakePhotoManager.postPhotoToGallery(this, photoPath);
         }
     }
 
@@ -119,53 +123,9 @@ public class AddImagesActivity extends AppCompatActivity {
     void addImage() {
 //        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        startActivityForResult(i, REQUEST_CHOOSE_IMAGE);
-        dispatchTakePictureIntent();
-
+        mTakePhotoManager.startTakePhoto(this);
     }
 
-    private void galleryAddPic(String imagePath) {
-        try {
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            Uri contentUri = Uri.fromFile(new File(imagePath));
-            mediaScanIntent.setData(contentUri);
-            this.sendBroadcast(mediaScanIntent);
-        } catch (Exception e) {
-            // why not?
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss-SSS").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
-
-    private String mTakedPhotoPath;
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                File photoFile = createImageFile();
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    Log.d("Take Photo file", photoFile.getAbsolutePath());
-                    mTakedPhotoPath = photoFile.getAbsolutePath();
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @OnClick(R.id.buttonUpload)
     void uploadImages() {
