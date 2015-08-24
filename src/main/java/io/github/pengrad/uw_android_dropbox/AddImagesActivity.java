@@ -103,6 +103,8 @@ public class AddImagesActivity extends AppCompatActivity {
 
         Job job = new Job(jobNumber, client, mAdapter.getImages());
         DropboxIntentService.startUploadJob(this, job);
+        Toast.makeText(getApplicationContext(),"Auftragsnummer " + jobNumber + " begann upload", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     class ListAdapter extends BaseAdapter {
