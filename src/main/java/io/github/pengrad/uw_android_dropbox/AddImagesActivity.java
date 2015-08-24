@@ -92,7 +92,12 @@ public class AddImagesActivity extends AppCompatActivity implements ImageResizer
         String jobNumber = mEditJobNumber.getText().toString();
         String client = mEditClientName.getText().toString();
         if (TextUtils.isEmpty(jobNumber) || TextUtils.isEmpty(client)) {
-            Toast.makeText(this, "Füllen Auftragsnummer und Name des Kunden", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Füllen Sie Auftragsnummer und Name des Kunden", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mAdapter.getImages().size() <= 0) {
+            Toast.makeText(this, "Fügen Sie Bild", Toast.LENGTH_SHORT).show();
             return;
         }
 
