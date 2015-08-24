@@ -32,7 +32,7 @@ public class ChooseImageManager {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String imagePath = cursor.getString(columnIndex);
         cursor.close();
-        Log.d("LoadImage", imagePath);
+        Log.d("LoadImage", imagePath == null ? "null" : imagePath);
         return imagePath;
     }
 
