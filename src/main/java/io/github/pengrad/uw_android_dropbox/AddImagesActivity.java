@@ -1,5 +1,8 @@
 package io.github.pengrad.uw_android_dropbox;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -82,10 +85,18 @@ public class AddImagesActivity extends AppCompatActivity implements ImageResizer
 
     @OnClick(R.id.buttonAddImage)
     void addImage() {
-//        mChooseImageManager.startChooseImage(this);
-        mTakePhotoManager.startTakePhoto(this);
+        final Activity activity = this;
+        String[] options = new String[]{"Von der Kamera", "Aus der Galerie"};
+        new AlertDialog.Builder(this)
+//                .setTitle("Wählen Sie")
+                .setNeutralButton("Abbrechen", null)
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == 0) mTakePhotoManager.startTakePhoto(activity);
+                        else if (i == 1) mChooseImageManager.startChooseImage(activity);
+                    }
+                }).show();
     }
-
 
     @OnClick(R.id.buttonUpload)
     void uploadImages() {
