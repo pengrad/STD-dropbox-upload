@@ -32,7 +32,8 @@ import butterknife.OnClick;
 
 public class AddImagesActivity extends AppCompatActivity {
 
-    public static final int REQUEST_LOAD_IMAGE = 123;
+    public static final int REQUEST_CHOOSE_IMAGE = 1;
+    public static final int REQUEST_TAKE_PHOTO = 2;
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
@@ -73,7 +74,7 @@ public class AddImagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == REQUEST_CHOOSE_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -92,7 +93,7 @@ public class AddImagesActivity extends AppCompatActivity {
 //                    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                     File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-                    File file = new File(dir, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg");
+                    File file = new File(dir, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date()) + ".jpg");
                     Log.d("Glide File Created", file.getAbsolutePath());
                     try {
                         FileOutputStream fos = new FileOutputStream(file);
@@ -105,6 +106,8 @@ public class AddImagesActivity extends AppCompatActivity {
                     }
                 }
             });
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            galleryAddPic(mTakedPhotoPath);
         }
     }
 
@@ -114,8 +117,54 @@ public class AddImagesActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonAddImage)
     void addImage() {
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, REQUEST_LOAD_IMAGE);
+//        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(i, REQUEST_CHOOSE_IMAGE);
+        dispatchTakePictureIntent();
+
+    }
+
+    private void galleryAddPic(String imagePath) {
+        try {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri contentUri = Uri.fromFile(new File(imagePath));
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+        } catch (Exception e) {
+            // why not?
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss-SSS").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+
+        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    private String mTakedPhotoPath;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                File photoFile = createImageFile();
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    Log.d("Take Photo file", photoFile.getAbsolutePath());
+                    mTakedPhotoPath = photoFile.getAbsolutePath();
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @OnClick(R.id.buttonUpload)
