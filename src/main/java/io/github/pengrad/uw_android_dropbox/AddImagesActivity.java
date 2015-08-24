@@ -1,12 +1,9 @@
 package io.github.pengrad.uw_android_dropbox;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -32,15 +29,13 @@ import butterknife.OnClick;
 
 public class AddImagesActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CHOOSE_IMAGE = 1;
-
-
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.listview) ListView mListView;
 
     private ImageListAdapter mAdapter;
     private TakePhotoManager mTakePhotoManager;
+    private ChooseImageManager mChooseImageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +47,7 @@ public class AddImagesActivity extends AppCompatActivity {
         initActionBar();
 
         mTakePhotoManager = new TakePhotoManager();
+        mChooseImageManager = new ChooseImageManager();
 
         mAdapter = new ImageListAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -77,18 +73,9 @@ public class AddImagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CHOOSE_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-//            processNewImage(picturePath);
-            Log.d("LoadImage", picturePath);
+        if (requestCode == ChooseImageManager.REQUEST_CHOOSE_IMAGE && resultCode == RESULT_OK) {
+            String picturePath = mChooseImageManager.getChoosedImagePath(this, data);
 
-//            Glide.with(this).load(picturePath).asBitmap().override()
 
             Glide.with(this).load(picturePath).asBitmap().override(1000, 1000).fitCenter().into(new SimpleTarget<Bitmap>() {
                 @Override
@@ -121,8 +108,7 @@ public class AddImagesActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonAddImage)
     void addImage() {
-//        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(i, REQUEST_CHOOSE_IMAGE);
+//        mChooseImageManager.startChooseImage(this);
         mTakePhotoManager.startTakePhoto(this);
     }
 
