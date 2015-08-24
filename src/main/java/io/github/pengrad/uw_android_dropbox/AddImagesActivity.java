@@ -1,27 +1,30 @@
 package io.github.pengrad.uw_android_dropbox;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,7 +38,7 @@ public class AddImagesActivity extends AppCompatActivity {
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.listview) ListView mListView;
 
-    private ListAdapter mAdapter;
+    private ImageListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class AddImagesActivity extends AppCompatActivity {
 
         initActionBar();
 
-        mAdapter = new ListAdapter(this);
+        mAdapter = new ImageListAdapter(this);
         mListView.setAdapter(mAdapter);
     }
 
@@ -78,7 +81,30 @@ public class AddImagesActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            processNewImage(picturePath);
+//            processNewImage(picturePath);
+            Log.d("LoadImage", picturePath);
+
+//            Glide.with(this).load(picturePath).asBitmap().override()
+
+            Glide.with(this).load(picturePath).asBitmap().override(1000, 1000).fitCenter().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+//                    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                    File file = new File(dir, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg");
+                    Log.d("Glide File Created", file.getAbsolutePath());
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+                        fos.flush();
+                        fos.close();
+                        processNewImage(file.getAbsolutePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -103,65 +129,7 @@ public class AddImagesActivity extends AppCompatActivity {
 
         Job job = new Job(jobNumber, client, mAdapter.getImages());
         DropboxIntentService.startUploadJob(this, job);
-        Toast.makeText(getApplicationContext(),"Auftragsnummer " + jobNumber + " begann upload", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Auftragsnummer " + jobNumber + " begann upload", Toast.LENGTH_SHORT).show();
         finish();
-    }
-
-    class ListAdapter extends BaseAdapter {
-
-        private final LayoutInflater mInflater;
-        private List<ImageTimestamp> mImages;
-
-        public ListAdapter(Context context) {
-            mInflater = LayoutInflater.from(context);
-            mImages = new ArrayList<>();
-        }
-
-        public void addImage(ImageTimestamp image) {
-            mImages.add(image);
-            notifyDataSetChanged();
-        }
-
-        public void removeImage(int pos) {
-            mImages.remove(pos);
-            notifyDataSetChanged();
-        }
-
-        public List<ImageTimestamp> getImages() {
-            return mImages;
-        }
-
-        @Override
-        public int getCount() {
-            return mImages.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mImages.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_image, parent, false);
-            }
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            imageView.setImageBitmap(BitmapFactory.decodeFile(mImages.get(position).imagePath));
-
-            convertView.findViewById(R.id.buttonImageDelete).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeImage(position);
-                }
-            });
-
-            return convertView;
-        }
     }
 }
