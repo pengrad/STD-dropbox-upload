@@ -52,6 +52,7 @@ public class TakePhotoManager {
     }
 
     public void postPhotoToGallery(Context context, String imagePath) {
+        if (imagePath == null) return;
         try {
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri contentUri = Uri.fromFile(new File(imagePath));

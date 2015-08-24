@@ -1,33 +1,20 @@
 package io.github.pengrad.uw_android_dropbox;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddImagesActivity extends AppCompatActivity {
+public class AddImagesActivity extends AppCompatActivity implements ImageResizer.OnProcessedImageListener {
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
     @Bind(R.id.clientName) EditText mEditClientName;
@@ -36,6 +23,7 @@ public class AddImagesActivity extends AppCompatActivity {
     private ImageListAdapter mAdapter;
     private TakePhotoManager mTakePhotoManager;
     private ChooseImageManager mChooseImageManager;
+    private ImageResizer mImageResizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +36,7 @@ public class AddImagesActivity extends AppCompatActivity {
 
         mTakePhotoManager = new TakePhotoManager();
         mChooseImageManager = new ChooseImageManager();
+        mImageResizer = new ImageResizer(this);
 
         mAdapter = new ImageListAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -73,37 +62,22 @@ public class AddImagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        String imagePath = null;
         if (requestCode == ChooseImageManager.REQUEST_CHOOSE_IMAGE && resultCode == RESULT_OK) {
-            String picturePath = mChooseImageManager.getChoosedImagePath(this, data);
-
-
-            Glide.with(this).load(picturePath).asBitmap().override(1000, 1000).fitCenter().into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-//                    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                    File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-                    File file = new File(dir, new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date()) + ".jpg");
-                    Log.d("Glide File Created", file.getAbsolutePath());
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-                        fos.flush();
-                        fos.close();
-                        processNewImage(file.getAbsolutePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            imagePath = mChooseImageManager.getChoosedImagePath(this, data);
         } else if (requestCode == TakePhotoManager.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            String photoPath = mTakePhotoManager.getLastTakedPhoto();
-            mTakePhotoManager.postPhotoToGallery(this, photoPath);
+            imagePath = mTakePhotoManager.getLastTakedPhoto();
+            mTakePhotoManager.postPhotoToGallery(this, imagePath);
+        }
+
+        if (imagePath != null) {
+            mImageResizer.resizeImage(this, imagePath);
         }
     }
 
-    private void processNewImage(String picturePath) {
-        mAdapter.addImage(new ImageTimestamp(picturePath));
+    @Override
+    public void onProcessedImage(String imagePath) {
+        mAdapter.addImage(new ImageTimestamp(imagePath));
     }
 
     @OnClick(R.id.buttonAddImage)
