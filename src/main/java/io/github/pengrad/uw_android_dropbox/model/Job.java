@@ -12,10 +12,10 @@ public class Job implements Serializable {
 
     public final String jobNumber;
     public final String client;
-    public final List<ImageTimestamp> images;
+    public final List<DropboxImage> images;
     public Date date;
 
-    public Job(String jobNumber, String client, List<ImageTimestamp> images) {
+    public Job(String jobNumber, String client, List<DropboxImage> images) {
         this.jobNumber = jobNumber;
         this.client = client;
         this.images = images;

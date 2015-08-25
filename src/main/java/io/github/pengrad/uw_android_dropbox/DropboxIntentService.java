@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
 public class DropboxIntentService extends IntentService {
@@ -49,7 +49,7 @@ public class DropboxIntentService extends IntentService {
 
     private void handleJob(Job job) {
         DropboxAPI<AndroidAuthSession> dropboxAPI = MyApp.get(this).getDropboxApi();
-        for (ImageTimestamp image : job.images) {
+        for (DropboxImage image : job.images) {
             try {
                 File file = new File(image.imagePath);
                 FileInputStream inputStream = new FileInputStream(file);

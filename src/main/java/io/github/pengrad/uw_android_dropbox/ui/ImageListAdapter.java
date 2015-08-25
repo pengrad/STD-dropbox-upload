@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.pengrad.uw_android_dropbox.R;
-import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 
 /**
  * stas
@@ -22,7 +22,7 @@ import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
 public class ImageListAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
-    private List<ImageTimestamp> mImages;
+    private List<DropboxImage> mImages;
     private Context mContext;
 
     public ImageListAdapter(Context context) {
@@ -31,7 +31,7 @@ public class ImageListAdapter extends BaseAdapter {
         mImages = new ArrayList<>();
     }
 
-    public void addImage(ImageTimestamp image) {
+    public void addImage(DropboxImage image) {
         mImages.add(image);
         notifyDataSetChanged();
     }
@@ -41,7 +41,7 @@ public class ImageListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public List<ImageTimestamp> getImages() {
+    public List<DropboxImage> getImages() {
         return mImages;
     }
 

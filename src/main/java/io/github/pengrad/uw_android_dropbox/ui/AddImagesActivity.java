@@ -19,7 +19,7 @@ import butterknife.OnClick;
 import io.github.pengrad.uw_android_dropbox.image.ChooseImageManager;
 import io.github.pengrad.uw_android_dropbox.DropboxIntentService;
 import io.github.pengrad.uw_android_dropbox.image.ImageResizer;
-import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 import io.github.pengrad.uw_android_dropbox.R;
 import io.github.pengrad.uw_android_dropbox.image.TakePhotoManager;
@@ -87,7 +87,7 @@ public class AddImagesActivity extends AppCompatActivity implements ImageResizer
 
     @Override
     public void onProcessedImage(String imagePath) {
-        mAdapter.addImage(new ImageTimestamp(imagePath));
+        mAdapter.addImage(new DropboxImage(imagePath));
     }
 
     @OnClick(R.id.buttonAddImage)
