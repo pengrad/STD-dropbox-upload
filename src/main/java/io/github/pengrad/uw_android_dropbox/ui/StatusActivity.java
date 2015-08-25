@@ -21,6 +21,7 @@ import io.github.pengrad.uw_android_dropbox.model.Job;
 public class StatusActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     @Bind(R.id.listview) ListView mListView;
+    private JobListAdapter mJobAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,13 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
 
+        mJobAdapter = new JobListAdapter(StatusActivity.this);
+        mListView.setAdapter(mJobAdapter);
+
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
             public void complete(List<Job> list) {
-                mListView.setAdapter(new JobListAdapter(StatusActivity.this, list));
+                mJobAdapter.setJobs(list);
             }
         });
     }
@@ -65,6 +69,9 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+        Job job = mJobAdapter.getItem(position);
+        mJobAdapter.removeJob(position);
+        job.delete();
+        return true;
     }
 }

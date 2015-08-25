@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,10 +30,19 @@ public class JobListAdapter extends BaseAdapter {
     private List<Job> mJobs;
     private Context mContext;
 
-    public JobListAdapter(Context context, List<Job> jobs) {
+    public JobListAdapter(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
+        mJobs = new ArrayList<>();
+    }
+
+    public void setJobs(List<Job> jobs) {
         mJobs = jobs;
+    }
+
+    public void removeJob(int position) {
+        mJobs.remove(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -41,7 +51,7 @@ public class JobListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Job getItem(int position) {
         return mJobs.get(position);
     }
 
@@ -77,5 +87,4 @@ public class JobListAdapter extends BaseAdapter {
 
         return convertView;
     }
-
 }
