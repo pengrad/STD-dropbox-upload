@@ -13,7 +13,7 @@ public class Job implements Serializable {
     public final String jobNumber;
     public final String client;
     public final List<DropboxImage> images;
-    public Date date;
+    public final Date date;
 
     public Job(String jobNumber, String client, List<DropboxImage> images) {
         this.jobNumber = jobNumber;
