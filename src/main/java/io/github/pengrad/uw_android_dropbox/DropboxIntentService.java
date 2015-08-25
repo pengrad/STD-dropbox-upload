@@ -49,11 +49,11 @@ public class DropboxIntentService extends IntentService {
 
     private void handleJob(Job job) {
         DropboxAPI<AndroidAuthSession> dropboxAPI = MyApp.get(this).getDropboxApi();
-        for (DropboxImage image : job.images) {
+        for (DropboxImage image : job.getImages()) {
             try {
-                File file = new File(image.imagePath);
+                File file = new File(image.getImagePath());
                 FileInputStream inputStream = new FileInputStream(file);
-                String fileName = getFileName(job.jobNumber, job.client, file.getName());
+                String fileName = getFileName(job.getJobNumber(), job.getClient(), file.getName());
                 Log.d(TAG, "handleJob startUpload " + fileName);
                 long time = new Date().getTime();
                 DropboxAPI.Entry response = dropboxAPI.putFileOverwrite(fileName, inputStream, file.length(), null);
@@ -61,7 +61,7 @@ public class DropboxIntentService extends IntentService {
                 Log.d(TAG, "The uploaded file's path is: " + response.path);
                 Log.d(TAG, "handleJob " + ((time2 - time) / 1000));
             } catch (FileNotFoundException e) {
-                Log.d("DropboxIntentService", "FileNotFound " + image.imagePath);
+                Log.d("DropboxIntentService", "FileNotFound " + image.getImagePath());
             } catch (DropboxException e) {
                 Log.d("DropboxIntentService", "Dropbox exception", e);
             }

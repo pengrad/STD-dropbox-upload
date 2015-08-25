@@ -16,13 +16,14 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.github.pengrad.uw_android_dropbox.image.ChooseImageManager;
+import co.uk.rushorm.core.RushCallback;
 import io.github.pengrad.uw_android_dropbox.DropboxIntentService;
+import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.image.ChooseImageManager;
 import io.github.pengrad.uw_android_dropbox.image.ImageResizer;
+import io.github.pengrad.uw_android_dropbox.image.TakePhotoManager;
 import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 import io.github.pengrad.uw_android_dropbox.model.Job;
-import io.github.pengrad.uw_android_dropbox.R;
-import io.github.pengrad.uw_android_dropbox.image.TakePhotoManager;
 
 public class AddImagesActivity extends AppCompatActivity implements ImageResizer.OnProcessedImageListener {
 
@@ -119,6 +120,12 @@ public class AddImagesActivity extends AppCompatActivity implements ImageResizer
         }
 
         Job job = new Job(jobNumber, client, mAdapter.getImages());
+
+        job.save(new RushCallback() {
+            public void complete() {
+            }
+        });
+
         DropboxIntentService.startUploadJob(this, job);
         Toast.makeText(getApplicationContext(), "Auftragsnummer " + jobNumber + " begann upload", Toast.LENGTH_SHORT).show();
         finish();

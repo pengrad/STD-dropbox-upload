@@ -67,7 +67,7 @@ public class ImageListAdapter extends BaseAdapter {
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
 
-        String imagePath = mImages.get(position).imagePath;
+        String imagePath = mImages.get(position).getImagePath();
         Glide.with(mContext).load(imagePath).centerCrop().into(imageView);
 
         convertView.findViewById(R.id.buttonImageDelete).setOnClickListener(new View.OnClickListener() {

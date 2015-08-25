@@ -10,6 +10,9 @@ import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
 import com.squareup.leakcanary.LeakCanary;
 
+import co.uk.rushorm.android.AndroidInitializeConfig;
+import co.uk.rushorm.core.RushCore;
+
 /**
  * stas
  * 8/23/15
@@ -39,6 +42,9 @@ public class MyApp extends Application {
         }
 
         mDBApi = new DropboxAPI<>(session);
+
+        AndroidInitializeConfig config = new AndroidInitializeConfig(getApplicationContext());
+        RushCore.initialize(config);
     }
 
     public DropboxAPI<AndroidAuthSession> getDropboxApi() {

@@ -7,9 +7,14 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import co.uk.rushorm.core.RushSearch;
+import co.uk.rushorm.core.RushSearchCallback;
 import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.model.Job;
 
 public class StatusActivity extends AppCompatActivity {
 
@@ -23,7 +28,18 @@ public class StatusActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initActionBar();
-        mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[]{"Auftragsnr 123123", "Auftragsnr 123123", "Auftragsnr 123123"}));
+
+
+        new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
+            @Override
+            public void complete(List<Job> list) {
+                mListView.setAdapter(new ArrayAdapter<>(StatusActivity.this, android.R.layout.simple_list_item_1, list));
+            }
+        });
+
+
+//        String[] s = new String[]{"Auftragsnr 123123", "Auftragsnr 123123", "Auftragsnr 123123"};
+
     }
 
     private void initActionBar() {
