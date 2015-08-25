@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.github.pengrad.uw_android_dropbox.R;
 
 public class StatusActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.model;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.image;
 
 import android.app.Activity;
 import android.content.Context;

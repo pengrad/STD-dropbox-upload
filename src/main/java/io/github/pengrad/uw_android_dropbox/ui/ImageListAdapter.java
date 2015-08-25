@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,11 +12,14 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+
 /**
  * stas
  * 8/25/15
  */
-class ImageListAdapter extends BaseAdapter {
+public class ImageListAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     private List<ImageTimestamp> mImages;

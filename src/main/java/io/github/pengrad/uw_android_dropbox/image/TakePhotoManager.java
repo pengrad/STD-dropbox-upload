@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.image;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+
+import io.github.pengrad.uw_android_dropbox.Utils;
 
 /**
  * stas

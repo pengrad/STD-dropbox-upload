@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import com.dropbox.client2.android.AndroidAuthSession;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.pengrad.uw_android_dropbox.MyApp;
+import io.github.pengrad.uw_android_dropbox.R;
 
 public class MainActivity extends AppCompatActivity {
 

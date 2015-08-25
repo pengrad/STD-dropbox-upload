@@ -1,4 +1,4 @@
-package io.github.pengrad.uw_android_dropbox;
+package io.github.pengrad.uw_android_dropbox.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +16,13 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.pengrad.uw_android_dropbox.image.ChooseImageManager;
+import io.github.pengrad.uw_android_dropbox.DropboxIntentService;
+import io.github.pengrad.uw_android_dropbox.image.ImageResizer;
+import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+import io.github.pengrad.uw_android_dropbox.model.Job;
+import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.image.TakePhotoManager;
 
 public class AddImagesActivity extends AppCompatActivity implements ImageResizer.OnProcessedImageListener {
 

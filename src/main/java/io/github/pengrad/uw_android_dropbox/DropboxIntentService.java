@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.github.pengrad.uw_android_dropbox.model.ImageTimestamp;
+import io.github.pengrad.uw_android_dropbox.model.Job;
+
 public class DropboxIntentService extends IntentService {
 
     private static final String ACTION_UPLOAD_JOB = "io.github.penrad.uw_android_dropbox.action.UPLOAD_JOB";
