@@ -10,6 +10,7 @@
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"/>
 

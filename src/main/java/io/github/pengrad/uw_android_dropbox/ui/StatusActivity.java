@@ -1,9 +1,12 @@
 package io.github.pengrad.uw_android_dropbox.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.List;
@@ -27,6 +30,13 @@ public class StatusActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initActionBar();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(StatusActivity.this, AddImagesActivity.class));
+            }
+        });
 
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
