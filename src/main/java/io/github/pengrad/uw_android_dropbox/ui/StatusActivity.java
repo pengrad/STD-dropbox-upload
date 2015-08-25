@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
@@ -29,17 +28,12 @@ public class StatusActivity extends AppCompatActivity {
 
         initActionBar();
 
-
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
             public void complete(List<Job> list) {
-                mListView.setAdapter(new ArrayAdapter<>(StatusActivity.this, android.R.layout.simple_list_item_1, list));
+                mListView.setAdapter(new JobListAdapter(StatusActivity.this, list));
             }
         });
-
-
-//        String[] s = new String[]{"Auftragsnr 123123", "Auftragsnr 123123", "Auftragsnr 123123"};
-
     }
 
     private void initActionBar() {

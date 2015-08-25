@@ -2,4 +2,7 @@
 <resources>
     <color name="blue">#25A</color>
     <color name="green">#2A5</color>
+
+    <color name="light_green">#5522AA55</color>
+    <color name="light_red">#55AA2222</color>
 </resources>

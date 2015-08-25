@@ -2,6 +2,7 @@ package io.github.pengrad.uw_android_dropbox;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * stas
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 public class Utils {
 
-    private static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMdd_HHmmss-SSS");
+    private static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMdd_HHmmss-SSS", Locale.getDefault());
 
     public static String getFileNameByDate() {
         return FORMATTER.format(new Date());
