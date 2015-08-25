@@ -14,9 +14,14 @@ import co.uk.rushorm.core.annotations.RushList;
  */
 public class Job extends RushObject implements Serializable {
 
+    public static final String STATUS_PENDING = "pending";
+    public static final String STATUS_OK = "ok";
+    public static final String STATUS_ERROR = "error";
+
     private String jobNumber;
     private String client;
     private Date date;
+    private String status;
 
     @RushList(classType = DropboxImage.class)
     private List<DropboxImage> images;
@@ -29,6 +34,7 @@ public class Job extends RushObject implements Serializable {
         this.client = client;
         this.images = images;
         this.date = new Date();
+        this.status = STATUS_PENDING;
     }
 
     public String getJobNumber() {
@@ -63,8 +69,32 @@ public class Job extends RushObject implements Serializable {
         this.date = date;
     }
 
+    public boolean isPending() {
+        return status.equals(STATUS_PENDING);
+    }
+
+    public boolean isOk() {
+        return status.equals(STATUS_OK);
+    }
+
+    public boolean isError() {
+        return status.equals(STATUS_ERROR);
+    }
+
+    public void setPending() {
+        status = STATUS_PENDING;
+    }
+
+    public void setOk() {
+        status = STATUS_OK;
+    }
+
+    public void setError() {
+        status = STATUS_ERROR;
+    }
+
     @Override
     public String toString() {
-        return "job: " + jobNumber + " client: " + client + " date: " + date + " images: " + Arrays.toString(images.toArray());
+        return "job: " + jobNumber + " client: " + client + " status: " + status + " date: " + date + " images: " + Arrays.toString(images.toArray());
     }
 }
