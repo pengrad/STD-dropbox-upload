@@ -17,22 +17,22 @@ import java.io.FileNotFoundException;
 import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
-public class DropboxIntentService extends IntentService {
+public class UploadJobIntentService extends IntentService {
 
-    public static final String TAG = "DropboxIntentService";
+    public static final String TAG = "UploadJobIntentService";
 
     private static final String ACTION_UPLOAD_JOB = "io.github.penrad.uw_android_dropbox.action.UPLOAD_JOB";
     private static final String EXTRA_JOB = "io.github.pengrad.uw_android_dropbox.extra.JOB";
 
     public static void startUploadJob(Context context, Job job) {
-        Intent intent = new Intent(context, DropboxIntentService.class);
+        Intent intent = new Intent(context, UploadJobIntentService.class);
         intent.setAction(ACTION_UPLOAD_JOB);
         intent.putExtra(EXTRA_JOB, job);
         context.startService(intent);
     }
 
-    public DropboxIntentService() {
-        super("DropboxIntentService");
+    public UploadJobIntentService() {
+        super("UploadJobIntentService");
     }
 
     @Override
@@ -47,10 +47,14 @@ public class DropboxIntentService extends IntentService {
     }
 
     private void handleJob(Job job) {
+        job.setPending();
         job.save();
         DropboxAPI<AndroidAuthSession> dropboxAPI = MyApp.get(this).getDropboxApi();
         boolean statusOk = true;
         for (DropboxImage image : job.getImages()) {
+            if (!TextUtils.isEmpty(image.getDropboxPath())) {
+                continue;
+            }
             try {
                 File file = new File(image.getImagePath());
                 FileInputStream inputStream = new FileInputStream(file);
@@ -60,10 +64,10 @@ public class DropboxIntentService extends IntentService {
                 image.setDropboxPath(response.path);
                 image.save();
             } catch (FileNotFoundException e) {
-                Log.d("DropboxIntentService", "FileNotFound " + image.getImagePath());
+                Log.d("UploadJobIntentService", "FileNotFound " + image.getImagePath());
                 statusOk = false;
             } catch (DropboxException e) {
-                Log.d("DropboxIntentService", "Dropbox exception", e);
+                Log.d("UploadJobIntentService", "Dropbox exception", e);
                 statusOk = false;
             }
         }

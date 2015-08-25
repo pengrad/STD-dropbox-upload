@@ -44,7 +44,7 @@
         </activity>
 
         <service
-            android:name=".DropboxIntentService"
+            android:name=".UploadJobIntentService"
             android:exported="false">
         </service>
 
