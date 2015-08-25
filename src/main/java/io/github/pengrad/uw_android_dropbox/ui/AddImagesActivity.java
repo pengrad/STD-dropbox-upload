@@ -95,7 +95,6 @@ public class AddImagesActivity extends AppCompatActivity implements ImageResizer
         final Activity activity = this;
         String[] options = new String[]{"Von der Kamera", "Aus der Galerie"};
         new AlertDialog.Builder(this)
-//                .setTitle("Wählen Sie")
                 .setNeutralButton("Abbrechen", null)
                 .setItems(options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {

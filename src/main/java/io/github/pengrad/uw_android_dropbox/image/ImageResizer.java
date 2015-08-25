@@ -31,6 +31,7 @@ public class ImageResizer {
         this.listener = new WeakReference<>(listener);
     }
 
+    // TODO: new parameter, final String newImagePath. remove creating files here
     public void resizeImage(final Context context, String imagePath) {
         Glide.with(context).load(imagePath).asBitmap().override(IMAGE_SIZE, IMAGE_SIZE).fitCenter()
                 .into(new SimpleTarget<Bitmap>() {
@@ -54,9 +55,7 @@ public class ImageResizer {
                 });
     }
 
-
     public interface OnProcessedImageListener {
         void onProcessedImage(String imagePath);
     }
-
 }

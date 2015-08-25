@@ -24,6 +24,7 @@ public class TakePhotoManager {
 
     private String mTakedPhotoPath;
 
+    // TODO: new parameter, final String imagePath. remove creating files here
     public void startTakePhoto(Activity activity) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
