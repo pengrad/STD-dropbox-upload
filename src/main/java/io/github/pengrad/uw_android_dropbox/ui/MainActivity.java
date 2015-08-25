@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.addImageSet)
     void openAddImagesActivity() {
         if (isDropboxLinked()) {
-            startActivity(new Intent(this, AddImagesActivity.class));
+            startActivity(new Intent(this, JobPostActivity.class));
         } else {
             Toast.makeText(this, "Link Dropbox Zuerst", Toast.LENGTH_SHORT).show();
         }

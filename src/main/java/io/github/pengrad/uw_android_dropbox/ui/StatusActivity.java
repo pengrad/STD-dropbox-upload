@@ -64,7 +64,7 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(StatusActivity.this, AddImagesActivity.class));
+        startActivity(new Intent(StatusActivity.this, JobPostActivity.class));
     }
 
     @Override
