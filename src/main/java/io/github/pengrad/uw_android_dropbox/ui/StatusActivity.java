@@ -1,6 +1,5 @@
 package io.github.pengrad.uw_android_dropbox.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -64,7 +63,7 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(StatusActivity.this, JobPostActivity.class));
+        startActivity(JobLookActivity.newIntent(this, mJobAdapter.getItem(position)));
     }
 
     @Override

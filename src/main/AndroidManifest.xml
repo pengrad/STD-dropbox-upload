@@ -52,6 +52,11 @@
             android:name=".ui.StatusActivity"
             android:label="Upload Status">
         </activity>
+
+        <activity
+            android:name=".ui.JobLookActivity"
+            android:label="Stammdaten">
+        </activity>
     </application>
 
 </manifest>
