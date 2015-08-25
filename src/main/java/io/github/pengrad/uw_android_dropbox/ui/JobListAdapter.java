@@ -67,8 +67,7 @@ public class JobListAdapter extends BaseAdapter {
         jobNumber.setText(job.getJobNumber());
         date.setText(FORMAT.format(job.getDate()));
         progressBar.setVisibility(job.isPending() ? View.VISIBLE : View.GONE);
-//        imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);
-        imageButton.setVisibility(View.VISIBLE);
+        imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

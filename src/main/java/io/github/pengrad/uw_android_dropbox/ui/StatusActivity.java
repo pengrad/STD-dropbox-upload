@@ -18,7 +18,7 @@ import co.uk.rushorm.core.RushSearchCallback;
 import io.github.pengrad.uw_android_dropbox.R;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
-public class StatusActivity extends AppCompatActivity {
+public class StatusActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     @Bind(R.id.listview) ListView mListView;
 
@@ -31,12 +31,8 @@ public class StatusActivity extends AppCompatActivity {
 
         initActionBar();
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(StatusActivity.this, AddImagesActivity.class));
-            }
-        });
+        mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
 
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
@@ -60,5 +56,15 @@ public class StatusActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        startActivity(new Intent(StatusActivity.this, AddImagesActivity.class));
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
     }
 }
