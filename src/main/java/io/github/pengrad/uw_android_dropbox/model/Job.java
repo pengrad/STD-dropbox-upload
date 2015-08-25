@@ -95,6 +95,6 @@ public class Job extends RushObject implements Serializable {
 
     @Override
     public String toString() {
-        return "job: " + jobNumber + " client: " + client + " status: " + status + " date: " + date + " images: " + Arrays.toString(images.toArray());
+        return "id:" + getId() + " job: " + jobNumber + " client: " + client + " status: " + status + " date: " + date + " images: " + Arrays.toString(images.toArray());
     }
 }

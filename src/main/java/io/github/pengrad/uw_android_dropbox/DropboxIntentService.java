@@ -13,7 +13,6 @@ import com.dropbox.client2.exception.DropboxException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Date;
 
 import io.github.pengrad.uw_android_dropbox.model.DropboxImage;
 import io.github.pengrad.uw_android_dropbox.model.Job;
@@ -48,24 +47,29 @@ public class DropboxIntentService extends IntentService {
     }
 
     private void handleJob(Job job) {
+        job.save();
         DropboxAPI<AndroidAuthSession> dropboxAPI = MyApp.get(this).getDropboxApi();
+        boolean statusOk = true;
         for (DropboxImage image : job.getImages()) {
             try {
                 File file = new File(image.getImagePath());
                 FileInputStream inputStream = new FileInputStream(file);
                 String fileName = getFileName(job.getJobNumber(), job.getClient(), file.getName());
                 Log.d(TAG, "handleJob startUpload " + fileName);
-                long time = new Date().getTime();
                 DropboxAPI.Entry response = dropboxAPI.putFileOverwrite(fileName, inputStream, file.length(), null);
-                long time2 = new Date().getTime();
-                Log.d(TAG, "The uploaded file's path is: " + response.path);
-                Log.d(TAG, "handleJob " + ((time2 - time) / 1000));
+                image.setDropboxPath(response.path);
+                image.save();
             } catch (FileNotFoundException e) {
                 Log.d("DropboxIntentService", "FileNotFound " + image.getImagePath());
+                statusOk = false;
             } catch (DropboxException e) {
                 Log.d("DropboxIntentService", "Dropbox exception", e);
+                statusOk = false;
             }
         }
+        if (statusOk) job.setOk();
+        else job.setError();
+        job.save();
     }
 
     private String getFileName(String jobNumber, String clientName, String fileName) {
