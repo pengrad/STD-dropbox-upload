@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.UploadJobIntentService;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
 /**
@@ -67,10 +67,10 @@ public class JobListAdapter extends BaseAdapter {
         }
         TextView jobNumber = (TextView) convertView.findViewById(R.id.jobNumber);
         TextView date = (TextView) convertView.findViewById(R.id.date);
-        ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-        ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.reUpload);
+        final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+        final ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.reUpload);
 
-        Job job = mJobs.get(position);
+        final Job job = mJobs.get(position);
         int colorResource = job.isError() ? R.color.light_red : R.color.light_green;
         convertView.setBackgroundColor(mContext.getResources().getColor(colorResource));
 
@@ -78,10 +78,13 @@ public class JobListAdapter extends BaseAdapter {
         date.setText(FORMAT.format(job.getDate()));
         progressBar.setVisibility(job.isPending() ? View.VISIBLE : View.GONE);
         imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "hey", Toast.LENGTH_SHORT).show();
+                UploadJobIntentService.reUploadJob(mContext.getApplicationContext(), job);
+                imageButton.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 
