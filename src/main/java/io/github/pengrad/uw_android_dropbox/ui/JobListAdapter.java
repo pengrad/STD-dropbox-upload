@@ -45,6 +45,11 @@ public class JobListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setPendingJob(int position) {
+        mJobs.get(position).setPending();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mJobs.size();
@@ -80,11 +85,9 @@ public class JobListAdapter extends BaseAdapter {
         imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
+                setPendingJob(position);
                 UploadJobIntentService.reUploadJob(mContext.getApplicationContext(), job);
-                imageButton.setVisibility(View.GONE);
-                progressBar.setVisibility(View.VISIBLE);
             }
         });
 

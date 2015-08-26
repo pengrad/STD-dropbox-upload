@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.uk.rushorm.core.RushSearch;
 import co.uk.rushorm.core.RushSearchCallback;
+import io.github.pengrad.uw_android_dropbox.JobDeleteIntentService;
 import io.github.pengrad.uw_android_dropbox.R;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
@@ -39,7 +39,11 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
         mJobAdapter = new JobListAdapter(StatusActivity.this);
         mListView.setAdapter(mJobAdapter);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
             public void complete(List<Job> list) {
@@ -70,18 +74,16 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Job job = mJobAdapter.getItem(position);
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        final Job job = mJobAdapter.getItem(position);
 
         new AlertDialog.Builder(this)
                 .setMessage("Entfernen aus der Liste?\nBilder werden nicht von der Dropbox löschen")
                 .setNegativeButton("Abbrechen", null)
                 .setPositiveButton("Entfernen", new DialogInterface.OnClickListener() {
-                    @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
-//                        mJobAdapter.removeJob(position);
-//                        job.delete();
+                        mJobAdapter.setPendingJob(position);
+                        JobDeleteIntentService.startActionLocalDelete(getApplicationContext(), job.getId());
                     }
                 })
                 .show();

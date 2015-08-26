@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.pengrad.uw_android_dropbox.JobDeleteIntentService;
 import io.github.pengrad.uw_android_dropbox.R;
 import io.github.pengrad.uw_android_dropbox.model.Job;
 
@@ -25,9 +25,11 @@ import io.github.pengrad.uw_android_dropbox.model.Job;
 public class JobLookActivity extends AppCompatActivity {
 
     public static final String EXTRA_JOB = "JOB";
+    public static final String EXTRA_JOB_ID = "JOB_ID";
+    private String mJobId;
 
     public static Intent newIntent(Context context, Job job) {
-        return new Intent().putExtra(EXTRA_JOB, job).setClass(context, JobLookActivity.class);
+        return new Intent().putExtra(EXTRA_JOB, job).putExtra(EXTRA_JOB_ID, job.getId()).setClass(context, JobLookActivity.class);
     }
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
@@ -41,6 +43,7 @@ public class JobLookActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initActionBar();
 
+        mJobId = getIntent().getStringExtra(EXTRA_JOB_ID);
         Job job = (Job) getIntent().getSerializableExtra(EXTRA_JOB);
         mEditJobNumber.setText(job.getJobNumber());
         mEditClientName.setText(job.getClient());
@@ -71,9 +74,9 @@ public class JobLookActivity extends AppCompatActivity {
                 .setNegativeButton("Abbrechen", null)
                 .setPositiveButton("Entfernen", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
+                        JobDeleteIntentService.startActionDeleteDropbox(getApplicationContext(), mJobId);
+                        finish();
                     }
-                })
-                .show();
+                }).show();
     }
 }
