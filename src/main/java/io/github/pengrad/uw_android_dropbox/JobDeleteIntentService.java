@@ -57,6 +57,7 @@ public class JobDeleteIntentService extends IntentService {
     }
 
     private void handleDelete(Job job, boolean fromDropbox) {
+        if (job == null) return;
         job.setPending();
         job.save();
         boolean statusOK = true;
