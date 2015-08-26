@@ -1,6 +1,8 @@
 package io.github.pengrad.uw_android_dropbox.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,6 +65,16 @@ public class JobLookActivity extends AppCompatActivity {
 
     @OnClick(R.id.buttonDelete)
     void onDelete() {
-
+        new AlertDialog.Builder(this)
+                .setTitle("Achtung")
+                .setMessage("Sind Sie sicher, Sie wollen Bilder von Dropbox entfernen?")
+                .setNegativeButton("Abbrechen", null)
+                .setPositiveButton("Entfernen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 }
