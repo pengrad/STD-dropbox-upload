@@ -6,13 +6,18 @@
               android:orientation="vertical"
               tools:context="io.github.pengrad.uw_android_dropbox.ui.StatusActivity">
 
-    <ListView
-        android:id="@+id/listview"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:longClickable="true"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"/>
+        android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:longClickable="true"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

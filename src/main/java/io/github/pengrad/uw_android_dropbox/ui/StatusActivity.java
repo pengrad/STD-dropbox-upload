@@ -3,6 +3,7 @@ package io.github.pengrad.uw_android_dropbox.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import io.github.pengrad.uw_android_dropbox.model.Job;
 
 public class StatusActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
+    @Bind(R.id.refreshLayout) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.listview) ListView mListView;
     private JobListAdapter mJobAdapter;
 
@@ -39,11 +41,28 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
         mJobAdapter = new JobListAdapter(StatusActivity.this);
         mListView.setAdapter(mJobAdapter);
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadJobs();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(true);
+                loadJobs();
+            }
+        });
+    }
+
+    private void loadJobs() {
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
             public void complete(final List<Job> list) {
@@ -56,6 +75,7 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
 
             }
         });
+        mRefreshLayout.setRefreshing(false);
     }
 
     private void initActionBar() {
@@ -73,6 +93,7 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
