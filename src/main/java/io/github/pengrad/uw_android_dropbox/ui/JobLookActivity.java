@@ -70,7 +70,6 @@ public class JobLookActivity extends AppCompatActivity {
                 .setMessage("Sind Sie sicher, Sie wollen Bilder von Dropbox entfernen?")
                 .setNegativeButton("Abbrechen", null)
                 .setPositiveButton("Entfernen", new DialogInterface.OnClickListener() {
-                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
                     }

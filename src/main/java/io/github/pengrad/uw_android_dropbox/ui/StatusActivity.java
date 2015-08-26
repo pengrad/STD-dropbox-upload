@@ -1,5 +1,7 @@
 package io.github.pengrad.uw_android_dropbox.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -69,8 +72,20 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Job job = mJobAdapter.getItem(position);
-        mJobAdapter.removeJob(position);
-        job.delete();
+
+        new AlertDialog.Builder(this)
+                .setMessage("Entfernen aus der Liste?\nBilder werden nicht von der Dropbox löschen")
+                .setNegativeButton("Abbrechen", null)
+                .setPositiveButton("Entfernen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
+//                        mJobAdapter.removeJob(position);
+//                        job.delete();
+                    }
+                })
+                .show();
+
         return true;
     }
 }
