@@ -46,8 +46,14 @@ public class StatusActivity extends AppCompatActivity implements AdapterView.OnI
         super.onResume();
         new RushSearch().orderDesc("date").find(Job.class, new RushSearchCallback<Job>() {
             @Override
-            public void complete(List<Job> list) {
-                mJobAdapter.setJobs(list);
+            public void complete(final List<Job> list) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mJobAdapter.setJobs(list);
+                    }
+                });
+
             }
         });
     }

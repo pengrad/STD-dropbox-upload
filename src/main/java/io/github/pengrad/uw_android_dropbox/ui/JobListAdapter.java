@@ -38,6 +38,7 @@ public class JobListAdapter extends BaseAdapter {
 
     public void setJobs(List<Job> jobs) {
         mJobs = jobs;
+        notifyDataSetChanged();
     }
 
     public void removeJob(int position) {
