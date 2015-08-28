@@ -74,7 +74,7 @@ public class UploadJobIntentService extends IntentService {
             try {
                 File file = new File(image.getImagePath());
                 FileInputStream inputStream = new FileInputStream(file);
-                String fileName = getFileName(job.getJobNumber(), job.getClient(), file.getName());
+                String fileName = getFileName(job.getJobNumber(), job.getTankId(), job.getClient(), file.getName());
                 Log.d(TAG, "handleJob startUpload " + fileName);
                 DropboxAPI.Entry response = dropboxAPI.putFileOverwrite(fileName, inputStream, file.length(), null);
                 image.setDropboxPath(response.path);
@@ -92,18 +92,21 @@ public class UploadJobIntentService extends IntentService {
         job.save();
     }
 
-    private String getFileName(String jobNumber, String clientName, String fileName) {
+    private String getFileName(String jobNumber, String tankId, String clientName, String fileName) {
         if (TextUtils.isEmpty(jobNumber)) {
             jobNumber = "000";
         }
         if (TextUtils.isEmpty(clientName)) {
             clientName = "unknown";
         }
+        if (TextUtils.isEmpty(tankId)) {
+            tankId = "";
+        }
 
         int dotPosition = fileName.lastIndexOf(".");
         String name = fileName.substring(0, dotPosition);
         String extension = fileName.substring(dotPosition);
 
-        return jobNumber + "_" + name + "_" + clientName + extension;
+        return jobNumber + "_" + tankId + "_" + name + "_" + clientName + extension;
     }
 }
