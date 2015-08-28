@@ -10,24 +10,31 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="io.github.pengrad.uw_android_dropbox.ui.JobPostActivity">
 
-    <EditText
-        android:id="@+id/jobNumber"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:hint="Auftragsnummer"
-        android:inputType="number"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/jobNumber"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Auftragsnummer"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/tankId"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Tank Id"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/clientName"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:hint="Name des Kunden"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bilder"
-        android:textSize="20sp"/>
 
     <ListView
         android:id="@+id/listview"

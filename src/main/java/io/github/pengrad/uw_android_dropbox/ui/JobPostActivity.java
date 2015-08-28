@@ -16,8 +16,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.github.pengrad.uw_android_dropbox.UploadJobIntentService;
 import io.github.pengrad.uw_android_dropbox.R;
+import io.github.pengrad.uw_android_dropbox.UploadJobIntentService;
 import io.github.pengrad.uw_android_dropbox.image.ChooseImageManager;
 import io.github.pengrad.uw_android_dropbox.image.ImageResizer;
 import io.github.pengrad.uw_android_dropbox.image.TakePhotoManager;
@@ -27,6 +27,7 @@ import io.github.pengrad.uw_android_dropbox.model.Job;
 public class JobPostActivity extends AppCompatActivity implements ImageResizer.OnProcessedImageListener {
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
+    @Bind(R.id.tankId) EditText mEditTankId;
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.listview) ListView mListView;
 
@@ -107,8 +108,9 @@ public class JobPostActivity extends AppCompatActivity implements ImageResizer.O
     @OnClick(R.id.buttonUpload)
     void uploadImages() {
         String jobNumber = mEditJobNumber.getText().toString();
+        String tankId = mEditTankId.getText().toString();
         String client = mEditClientName.getText().toString();
-        if (TextUtils.isEmpty(jobNumber) || TextUtils.isEmpty(client)) {
+        if (TextUtils.isEmpty(jobNumber) || TextUtils.isEmpty(client) || TextUtils.isEmpty(tankId)) {
             Toast.makeText(this, "Füllen Sie Auftragsnummer und Name des Kunden", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -118,7 +120,7 @@ public class JobPostActivity extends AppCompatActivity implements ImageResizer.O
             return;
         }
 
-        Job job = new Job(jobNumber, client, mAdapter.getImages());
+        Job job = new Job(jobNumber, tankId, client, mAdapter.getImages());
         UploadJobIntentService.startUploadJob(this, job);
         Toast.makeText(getApplicationContext(), "Auftragsnummer " + jobNumber + " begann upload", Toast.LENGTH_SHORT).show();
         finish();

@@ -72,6 +72,7 @@ public class JobListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.list_item_job, parent, false);
         }
         TextView jobNumber = (TextView) convertView.findViewById(R.id.jobNumber);
+        TextView tankId = (TextView) convertView.findViewById(R.id.tankId);
         TextView date = (TextView) convertView.findViewById(R.id.date);
         final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
         final ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.reUpload);
@@ -81,6 +82,7 @@ public class JobListAdapter extends BaseAdapter {
         convertView.setBackgroundColor(mContext.getResources().getColor(colorResource));
 
         jobNumber.setText(job.getJobNumber());
+        tankId.setText(job.getTankId());
         date.setText(FORMAT.format(job.getDate()));
         progressBar.setVisibility(job.isPending() ? View.VISIBLE : View.GONE);
         imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);

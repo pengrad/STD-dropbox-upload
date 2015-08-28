@@ -19,6 +19,7 @@ public class Job extends RushObject implements Serializable {
     public static final String STATUS_ERROR = "error";
 
     private String jobNumber;
+    private String tankId;
     private String client;
     private Date date;
     private String status;
@@ -29,8 +30,9 @@ public class Job extends RushObject implements Serializable {
     public Job() {
     }
 
-    public Job(String jobNumber, String client, List<DropboxImage> images) {
+    public Job(String jobNumber, String tankId, String client, List<DropboxImage> images) {
         this.jobNumber = jobNumber;
+        this.tankId = tankId;
         this.client = client;
         this.images = images;
         this.date = new Date();
@@ -43,6 +45,10 @@ public class Job extends RushObject implements Serializable {
 
     public void setJobNumber(String jobNumber) {
         this.jobNumber = jobNumber;
+    }
+
+    public String getTankId() {
+        return tankId;
     }
 
     public String getClient() {
@@ -95,6 +101,6 @@ public class Job extends RushObject implements Serializable {
 
     @Override
     public String toString() {
-        return "id:" + getId() + " job: " + jobNumber + " client: " + client + " status: " + status + " date: " + date + " images: " + Arrays.toString(images.toArray());
+        return "id:" + getId() + " job: " + jobNumber + " tank: " + tankId + " client: " + client + " status: " + status + " date: " + date + " images: " + Arrays.toString(images.toArray());
     }
 }
