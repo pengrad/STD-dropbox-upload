@@ -33,6 +33,7 @@ public class JobLookActivity extends AppCompatActivity {
     }
 
     @Bind(R.id.jobNumber) EditText mEditJobNumber;
+    @Bind(R.id.tankId) EditText mEditTankId;
     @Bind(R.id.clientName) EditText mEditClientName;
     @Bind(R.id.gridview) GridView mGridView;
 
@@ -46,6 +47,7 @@ public class JobLookActivity extends AppCompatActivity {
         mJobId = getIntent().getStringExtra(EXTRA_JOB_ID);
         Job job = (Job) getIntent().getSerializableExtra(EXTRA_JOB);
         mEditJobNumber.setText(job.getJobNumber());
+        mEditTankId.setText(job.getTankId());
         mEditClientName.setText(job.getClient());
         mGridView.setAdapter(new ImageGridAdapter(this, job.getImages()));
     }

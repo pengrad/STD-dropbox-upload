@@ -10,15 +10,33 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="io.github.pengrad.uw_android_dropbox.ui.JobLookActivity">
 
-    <EditText
-        android:id="@+id/jobNumber"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:hint="Auftragsnummer"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/jobNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Auftragsnummer"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/tankId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Tank Id"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/clientName"
@@ -49,7 +67,7 @@
         android:layout_height="wrap_content"
         android:drawablePadding="10dp"
         android:padding="20dp"
-        android:textColor="@color/red"
-        android:text="Entfernen"/>
+        android:text="Entfernen"
+        android:textColor="@color/red"/>
 
 </LinearLayout>
