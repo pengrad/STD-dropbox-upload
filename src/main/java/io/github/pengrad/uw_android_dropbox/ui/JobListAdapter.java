@@ -1,6 +1,7 @@
 package io.github.pengrad.uw_android_dropbox.ui;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,7 @@ public class JobListAdapter extends BaseAdapter {
         convertView.setBackgroundColor(mContext.getResources().getColor(colorResource));
 
         jobNumber.setText(job.getJobNumber());
-        tankId.setText(job.getTankId());
+        tankId.setText(TextUtils.isEmpty(job.getTankId()) ? "—" : job.getTankId());
         date.setText(FORMAT.format(job.getDate()));
         progressBar.setVisibility(job.isPending() ? View.VISIBLE : View.GONE);
         imageButton.setVisibility(job.isError() ? View.VISIBLE : View.GONE);

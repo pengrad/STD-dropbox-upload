@@ -110,8 +110,8 @@ public class JobPostActivity extends AppCompatActivity implements ImageResizer.O
         String jobNumber = mEditJobNumber.getText().toString();
         String tankId = mEditTankId.getText().toString();
         String client = mEditClientName.getText().toString();
-        if (TextUtils.isEmpty(jobNumber) || TextUtils.isEmpty(client) || TextUtils.isEmpty(tankId)) {
-            Toast.makeText(this, "Füllen Sie Auftragsnummer und Name des Kunden", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(jobNumber)) {
+            Toast.makeText(this, "Füllen Sie Auftragsnummer", Toast.LENGTH_SHORT).show();
             return;
         }
 

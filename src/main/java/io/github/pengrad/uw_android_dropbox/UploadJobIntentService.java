@@ -97,7 +97,7 @@ public class UploadJobIntentService extends IntentService {
             jobNumber = "000";
         }
         if (TextUtils.isEmpty(clientName)) {
-            clientName = "unknown";
+            clientName = "";
         }
         if (TextUtils.isEmpty(tankId)) {
             tankId = "";
