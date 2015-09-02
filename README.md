@@ -1,6 +1,6 @@
 # STD-dropbox-upload
 Used libraries:
-- Butterknife
+- Butter Knife
 - Glide
 - Dropbox Android SDK 
 - RushOrm
