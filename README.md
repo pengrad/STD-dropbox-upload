@@ -1,4 +1,9 @@
 # STD-dropbox-upload
+
+Upload imagesets to Dropbox.
+Check upload status and options for re-uploading.
+
+
 Used libraries:
 - Butter Knife
 - Glide
